@@ -34,3 +34,13 @@ Flags=00001012
 File=C:\Users\Felix\Desktop\THROW\THROW.c
 Line=43
 Flags=00001012
+
+[Breakpoint]
+File=C:\Users\Felix\Desktop\THROW\THROW.c
+Line=16
+Flags=00001012
+
+[Breakpoint]
+File=C:\Users\Felix\Desktop\THROW\THROW.c
+Line=76
+Flags=00001012
