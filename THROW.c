@@ -37,14 +37,27 @@ void Render_F_Button(int x, int y, unsigned char *str){
 
 void Initialize(){
     unsigned char alpha[3]={0xE6,0x40,0};
+    unsigned char zero[3]={0xE5,0xD0,0};
+
+    Bdisp_AllClr_DDVRAM();
 
     PrintMini(2,2, (unsigned char*)"Throw simulation",MINI_OVER);
     Render_F_Button(2,58, "EXIT");
     Render_F_Button(24,58, "DEL ");
     Render_F_Button(46,58, "CALC");
     Render_F_Button(68,58, "SIM ");
-	PrintXY(5,16, alpha, 0);
-    PrintXY(12,17, (unsigned char*)"=",0);
+
+    PrintXY(5,16, alpha, 0);
+    PrintXY(17,17, (unsigned char*)"=",0);
+    
+    PrintXY(10,27, zero, 0);
+    PrintXY(5,26, (unsigned char*)"v",0);
+    PrintXY(17,27, (unsigned char*)"=",0);
+
+    PrintXY(5,37, (unsigned char*)"g",0);
+    PrintXY(17,37, (unsigned char*)"=",0);
+
+
     Bdisp_PutDisp_DD();
 }
 
@@ -81,6 +94,21 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
     while(1){
 	    GetKey(&key);
         Initialize();
+
+        if(key==KEY_CTRL_F2){
+            PopUpWin(4);
+            PrintXY(12,8, (unsigned char*)"Delete All?",0);
+            PrintXY(30,24, (unsigned char*)"Yes:[F1]",0);
+            PrintXY(30,32, (unsigned char*)"No :[F6]",0);
+            if(key==KEY_CTRL_F1){
+                break;
+            }else if(key==KEY_CTRL_F6){
+                angle = 0;
+                startvelocity = 0;
+                gravitationalforce = 9.81;
+                break;
+            }
+        }
 
         // Render_Arrows(24, 16);
 
