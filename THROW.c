@@ -9,11 +9,12 @@
 /*************************************************************/
 #include <stdio.h>
 #include <math.h>
+#include <mathf.h>
 #include "fxlib.h"
 
 void Print_Float(int x, int y, float f, int mini){
     unsigned char buffer[9];
-    sprintf(buffer, "%f", f);
+    sprintf(buffer, "%lf", f);
     if(mini==0){
         PrintXY(x,y,buffer,0);
     }else if(mini==1){
@@ -67,9 +68,13 @@ void Render_F_Button(int x, int y, unsigned char *str){
     Bdisp_SetPoint_VRAM(x+17, y+6, 0);
 }
 
-void Render_Main(){
+void Render_Main(int angle, float startvelocity, float gravitationalforce, int type){
     unsigned char alpha[3]={0xE6,0x40,0};
     unsigned char zero[3]={0xE5,0xD0,0};
+
+    double sw = 0.0;
+    double sh = 0.0;
+    double th = 0.0;
 
     Bdisp_AllClr_DDVRAM();
 
@@ -90,15 +95,43 @@ void Render_Main(){
     PrintXY(11,37, (unsigned char*)"g",0);
     PrintXY(23,37, (unsigned char*)"=",0);
 
-    Bdisp_PutDisp_DD();
-}
-
-void Render_Var(int angle, float startvelocity, float gravitationalforce){
     Print_Int(31, 16, angle, 0);
     Print_Float(31, 26, startvelocity, 0);
-    PrintXY(56,26, (unsigned char*)"            ",0);
+    PrintXY(56,26, (unsigned char*)"        ",0);
     Print_Float(31, 37, gravitationalforce, 0);
-    PrintXY(56,37, (unsigned char*)"            ",0);
+    PrintXY(56,37, (unsigned char*)"        ",0);
+
+    PrintMini(72,18, (unsigned char*)"w",MINI_OVER);
+    PrintXY(65,16, (unsigned char*)"s",0);
+    PrintXY(78,17, (unsigned char*)"=",0);
+
+    PrintMini(72,28, (unsigned char*)"h",MINI_OVER);
+    PrintXY(65,26, (unsigned char*)"s",0);
+    PrintXY(78,27, (unsigned char*)"=",0);
+
+    PrintMini(72,38, (unsigned char*)"h",MINI_OVER);
+    PrintXY(65,36, (unsigned char*)"t",0);
+    PrintXY(78,37, (unsigned char*)"=",0);
+
+    PrintXY(86,16, (unsigned char*)"        ",0);
+    PrintXY(86,26, (unsigned char*)"        ",0);
+    PrintXY(86,36, (unsigned char*)"        ",0);
+
+    if(type==1){
+        sw = ((startvelocity*sin(2*angle))/gravitationalforce);
+        // correct math.h sin behaviour when alpha = 45
+        if(angle==45){
+            sw = (startvelocity/gravitationalforce);
+        }
+        Print_Float(86,16, sw, 0);
+        PrintXY(117,16, (unsigned char*)"        ",0);
+        Print_Float(86,26, sh, 0);
+        PrintXY(117,26, (unsigned char*)"        ",0);
+        Print_Float(86,36, th, 0);
+        PrintXY(117,36, (unsigned char*)"        ",0);
+    }
+
+    Bdisp_PutDisp_DD();
 }
 
 
@@ -119,24 +152,52 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
     unsigned int key;
 
     int varselected = 1;
+    int type = 0;
 
     int angle;
     float startvelocity;
     float gravitationalforce;
 
-    Bdisp_AllClr_DDVRAM();
-    Render_Main();
-    varselected = Render_Indacator(varselected);
+    Bdisp_AllClr_DDVRAM(); 
+    
 
     angle = 45;
     startvelocity = 0;
     gravitationalforce = 9.81;
-    Render_Var(angle, startvelocity, gravitationalforce);
+    Render_Main(angle, startvelocity, gravitationalforce, type);
+    varselected = Render_Indacator(varselected);
 
     while(1){
 	    GetKey(&key);
-        Render_Main();
-        Render_Var(angle, startvelocity, gravitationalforce);
+        Render_Main(angle, startvelocity, gravitationalforce, type);
+
+        if(key==KEY_CTRL_F3){
+            type = 1;
+        }else{
+            type = 0;
+        }
+
+        if(key==KEY_CTRL_F2){
+            PopUpWin(4);
+            PrintXY(12,8, (unsigned char*)"Delete All?",0);
+            PrintXY(30,24, (unsigned char*)"Yes:[F1]",0);
+            PrintXY(30,32, (unsigned char*)"No :[F6]",0);
+            while(1){
+                GetKey(&key);
+                if(key==KEY_CTRL_F1){
+                    varselected = 1;
+                    angle = 45;
+                    startvelocity = 0.0;
+                    gravitationalforce = 9.81;
+                    break;
+                }else if(key==KEY_CTRL_F6){
+                    break;
+                }
+            }
+        }
+
+        Render_Main(angle, startvelocity, gravitationalforce, type);
+        varselected = Render_Indacator(varselected);      
 
         if(key==KEY_CTRL_DOWN){
             varselected = varselected+1;
@@ -168,30 +229,9 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
                 gravitationalforce = gravitationalforce-0.01;
             }   
         }
-        Render_Var(angle, startvelocity, gravitationalforce);
 
-
-        if(key==KEY_CTRL_F2){
-            PopUpWin(4);
-            PrintXY(12,8, (unsigned char*)"Delete All?",0);
-            PrintXY(30,24, (unsigned char*)"Yes:[F1]",0);
-            PrintXY(30,32, (unsigned char*)"No :[F6]",0);
-            while(GetKey(&key)){
-                GetKey(&key);
-                if(key==KEY_CTRL_F1){
-                    break;
-                }else if(key==KEY_CTRL_F6){
-                    varselected = 1;
-                    angle = 45;
-                    startvelocity = 0;
-                    gravitationalforce = 9.81;
-                    break;
-                }
-            }
-            Render_Main();
-            Render_Var(angle, startvelocity, gravitationalforce);    
-            varselected = Render_Indacator(varselected);
-        }
+        Render_Main(angle, startvelocity, gravitationalforce, type);   
+        varselected = Render_Indacator(varselected);
     }
 
     return 1;

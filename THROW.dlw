@@ -9,7 +9,7 @@ Height=4755
 Width=5565
 State=0
 Flags=00000020
-Setting=75:1:THROW.c
+Setting=172:1:THROW.c
 OptionA=0
 
 [_2]
@@ -110,5 +110,5 @@ Height=20130
 Width=10815
 State=0
 Flags=00000020
-Setting=40:30:THROW.c
+Setting=122:56:THROW.c
 OptionA=0
