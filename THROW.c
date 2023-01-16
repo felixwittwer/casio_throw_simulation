@@ -120,7 +120,9 @@ void Render_Main(int angle, float startvelocity, float gravitationalforce, int t
     PrintXY(86,36, (unsigned char*)"        ",0);
 
     if(type==1){
-        sw = ((pow(startvelocity, 2)*sin(2*angle))/gravitationalforce);
+        float rad;
+        rad = (angle/180.0)*3.141592;
+        sw = ((pow(startvelocity, 2)*sin(2*rad))/gravitationalforce);
         // correct math.h sin behaviour when alpha = 45
         if(angle==45){
             sw = (pow(startvelocity, 2)/gravitationalforce);
