@@ -71,6 +71,7 @@ void Render_F_Button(int x, int y, unsigned char *str){
 void Render_Main(int angle, float startvelocity, float gravitationalforce, int type){
     unsigned char alpha[3]={0xE6,0x40,0};
     unsigned char zero[3]={0xE5,0xD0,0};
+    unsigned char degree[2]={0x8C,0};
 
     double sw = 0.0;
     double sh = 0.0;
@@ -96,6 +97,7 @@ void Render_Main(int angle, float startvelocity, float gravitationalforce, int t
     PrintXY(23,37, (unsigned char*)"=",0);
 
     Print_Int(31, 16, angle, 0);
+    PrintXY(50,16, degree, 0);
     Print_Float(31, 26, startvelocity, 0);
     PrintXY(56,26, (unsigned char*)"        ",0);
     Print_Float(31, 37, gravitationalforce, 0);
@@ -118,13 +120,13 @@ void Render_Main(int angle, float startvelocity, float gravitationalforce, int t
     PrintXY(86,36, (unsigned char*)"        ",0);
 
     if(type==1){
-        sw = ((startvelocity*sin(2*angle))/gravitationalforce);
+        sw = ((pow(startvelocity, 2)*sin(2*angle))/gravitationalforce);
         // correct math.h sin behaviour when alpha = 45
         if(angle==45){
-            sw = (startvelocity/gravitationalforce);
+            sw = (pow(startvelocity, 2)/gravitationalforce);
         }
         Print_Float(86,16, sw, 0);
-        PrintXY(117,16, (unsigned char*)"        ",0);
+        PrintXY(117,16, (unsigned char*)"m        ",0);
         Print_Float(86,26, sh, 0);
         PrintXY(117,26, (unsigned char*)"        ",0);
         Print_Float(86,36, th, 0);
@@ -162,7 +164,7 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
     
 
     angle = 45;
-    startvelocity = 0;
+    startvelocity = 5;
     gravitationalforce = 9.81;
     Render_Main(angle, startvelocity, gravitationalforce, type);
     varselected = Render_Indacator(varselected);
