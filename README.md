@@ -2,3 +2,4 @@
 simulate throwing objects
 
 work in progress!
+but mostly finished.
