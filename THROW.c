@@ -72,6 +72,7 @@ void Render_Main(int angle, float startvelocity, float gravitationalforce, int t
     unsigned char alpha[3]={0xE6,0x40,0};
     unsigned char zero[3]={0xE5,0xD0,0};
     unsigned char degree[2]={0x8C,0};
+    unsigned char seconds[2]={0x22,0};
 
     double sw = 0.0;
     double sh = 0.0;
@@ -118,21 +119,22 @@ void Render_Main(int angle, float startvelocity, float gravitationalforce, int t
     PrintXY(86,16, (unsigned char*)"        ",0);
     PrintXY(86,26, (unsigned char*)"        ",0);
     PrintXY(86,36, (unsigned char*)"        ",0);
+    
 
     if(type==1){
         float rad;
         rad = (angle/180.0)*3.141592;
         sw = ((pow(startvelocity, 2)*sin(2*rad))/gravitationalforce);
-        // correct math.h sin behaviour when alpha = 45
-        if(angle==45){
-            sw = (pow(startvelocity, 2)/gravitationalforce);
-        }
+        sh = (pow(startvelocity, 2)*pow((sin(rad)), 2)/(2*gravitationalforce));
+        th = ((startvelocity*sin(rad))/gravitationalforce);
+
         Print_Float(86,16, sw, 0);
         PrintXY(117,16, (unsigned char*)"m        ",0);
         Print_Float(86,26, sh, 0);
-        PrintXY(117,26, (unsigned char*)"        ",0);
+        PrintXY(117,26, (unsigned char*)"m        ",0);
         Print_Float(86,36, th, 0);
-        PrintXY(117,36, (unsigned char*)"        ",0);
+        PrintXY(117,36, (unsigned char*)"         ",0);
+        PrintXY(117,36, seconds,0);
     }
 
     Bdisp_PutDisp_DD();
@@ -191,7 +193,7 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
                 if(key==KEY_CTRL_F1){
                     varselected = 1;
                     angle = 45;
-                    startvelocity = 0.0;
+                    startvelocity = 5.0;
                     gravitationalforce = 9.81;
                     break;
                 }else if(key==KEY_CTRL_F6){
@@ -220,9 +222,9 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
 
         if(varselected==2){
             if(key==KEY_CTRL_RIGHT){
-                startvelocity = startvelocity+0.1;
+                startvelocity = startvelocity+0.2;
             }else if(key==KEY_CTRL_LEFT){
-                startvelocity = startvelocity-0.1;
+                startvelocity = startvelocity-0.2;
             }   
         }
 
