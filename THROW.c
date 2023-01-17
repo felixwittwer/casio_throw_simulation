@@ -32,6 +32,15 @@ void Print_Int(int x, int y, int i, int mini){
     }
 }
 
+void Render_Ball(int x, int y){
+    Bdisp_DrawLineVRAM(x-1,y+2,x+1,y+2);
+    Bdisp_DrawLineVRAM(x-2,y+1,x+2,y+1);
+    Bdisp_DrawLineVRAM(x-2,y,x+2,y);
+    Bdisp_DrawLineVRAM(x-2,y-1,x+2,y-1);
+    Bdisp_DrawLineVRAM(x-1,y-2,x+1,y-2);
+}
+
+
 int Render_Indacator(int varselected){
     unsigned char indicator[3]={0xE6,0x91,0};
 
@@ -160,9 +169,15 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
     int varselected = 1;
     int type = 0;
 
+    float rad;
+
     int angle;
     float startvelocity;
     float gravitationalforce;
+
+    double sw = 0.0;
+    double sh = 0.0;
+    double th = 0.0;
 
     Bdisp_AllClr_DDVRAM(); 
     
@@ -176,12 +191,6 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
     while(1){
 	    GetKey(&key);
         Render_Main(angle, startvelocity, gravitationalforce, type);
-
-        if(key==KEY_CTRL_F3){
-            type = 1;
-        }else{
-            type = 0;
-        }
 
         if(key==KEY_CTRL_F2){
             PopUpWin(4);
@@ -200,6 +209,12 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
                     break;
                 }
             }
+        }
+
+        if(key==KEY_CTRL_F3){
+            type = 1;
+        }else{
+            type = 0;
         }
 
         Render_Main(angle, startvelocity, gravitationalforce, type);
@@ -238,6 +253,37 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
 
         Render_Main(angle, startvelocity, gravitationalforce, type);   
         varselected = Render_Indacator(varselected);
+
+        if(key==KEY_CTRL_F4){
+            Bdisp_AllClr_DDVRAM();
+
+            rad = (angle/180.0)*3.141592;
+            sw = ((pow(startvelocity, 2)*sin(2*rad))/gravitationalforce);
+            sh = (pow(startvelocity, 2)*pow((sin(rad)), 2)/(2*gravitationalforce));
+            th = ((startvelocity*sin(rad))/gravitationalforce);
+
+            Render_F_Button(1,58, "EXIT");
+            Render_F_Button(110,58, "PLAY");
+
+            while(1){
+                GetKey(&key);
+                
+                if(key==KEY_CTRL_F6){
+                    Print_Float(86,16, sw, 0);
+                    PrintXY(117,16, (unsigned char*)"m        ",0);
+                    Print_Float(86,26, sh, 0);
+                    PrintXY(117,26, (unsigned char*)"m        ",0);
+                    Print_Float(86,36, th, 0);
+                    PrintXY(117,36, (unsigned char*)"         ",0);
+                }
+
+                if(key==KEY_CTRL_F1){
+                    Render_Main(angle, startvelocity, gravitationalforce, type);   
+                    varselected = Render_Indacator(varselected);
+                    break;
+                }
+            }
+        }
     }
 
     return 1;
