@@ -149,7 +149,6 @@ void Render_Main(int angle, float startvelocity, float gravitationalforce, int t
     Bdisp_PutDisp_DD();
 }
 
-
 //****************************************************************************
 //  AddIn_main (Sample program main function)
 //
@@ -167,6 +166,7 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
     unsigned int key;
 
     int varselected = 1;
+    int helpy = -28;
     int type = 0;
 
     float rad;
@@ -190,7 +190,6 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
 
     while(1){
 	    GetKey(&key);
-        Render_Main(angle, startvelocity, gravitationalforce, type);
 
         if(key==KEY_CTRL_F2){
             PopUpWin(4);
@@ -209,23 +208,123 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
                     break;
                 }
             }
+        } 
+
+        if(key==KEY_CTRL_F4){
+            rad = (angle/180.0)*3.141592;
+            sw = ((pow(startvelocity, 2)*sin(2*rad))/gravitationalforce);
+            sh = (pow(startvelocity, 2)*pow((sin(rad)), 2)/(2*gravitationalforce));
+            th = ((startvelocity*sin(rad))/gravitationalforce);
+
+            Bdisp_AllClr_DDVRAM();
+            Render_F_Button(1,58, "EXIT");
+            Render_F_Button(110,58, "PLAY");
+
+            while(1){
+                GetKey(&key);
+
+                Bdisp_AllClr_DDVRAM();
+                Render_F_Button(1,58, "EXIT");
+                Render_F_Button(110,58, "PLAY");
+                
+                if(key==KEY_CTRL_F6){
+                    Print_Float(86,16, sw, 0);
+                    PrintXY(117,16, (unsigned char*)"m        ",0);
+                    Print_Float(86,26, sh, 0);
+                    PrintXY(117,26, (unsigned char*)"m        ",0);
+                    Print_Float(86,36, th, 0);
+                    PrintXY(117,36, (unsigned char*)"         ",0);
+                }
+
+                if(key==KEY_CTRL_F1){
+                    Render_Main(angle, startvelocity, gravitationalforce, type);   
+                    varselected = Render_Indacator(varselected);
+                    break;
+                }
+            }
         }
 
-        if(key==KEY_CTRL_F3){
-            type = 1;
-        }else{
-            type = 0;
-        }
+        if(key==KEY_CTRL_F5){
 
-        Render_Main(angle, startvelocity, gravitationalforce, type);
-        varselected = Render_Indacator(varselected);      
+            Bdisp_AllClr_DDVRAM();
+            PrintXY(2,2,(unsigned char*)"Press any key!", 0);
+            Render_F_Button(1,58, "EXIT");
+            Render_F_Button(88,58, "TOP ");
+            Render_F_Button(110,58, "BTM ");
+
+            while(1){
+                GetKey(&key);
+
+                Bdisp_AllClr_DDVRAM();
+                Render_F_Button(1,58, "EXIT");
+
+                if(key==KEY_CTRL_F1){
+                    Render_Main(angle, startvelocity, gravitationalforce, type);   
+                    varselected = Render_Indacator(varselected);
+                    break;
+                }
+
+                if(key==KEY_CTRL_DOWN){
+                    helpy = helpy +12;
+                }
+
+                if(key==KEY_CTRL_UP){
+                    helpy = helpy -12;
+                }
+
+                if(key==KEY_CTRL_F5){
+                    helpy = -28;
+                }
+
+                if(key==KEY_CTRL_F6){
+                    helpy = 176;
+                }
+
+                PrintMini(2,-16-helpy,(unsigned char*)"(c) 2023 Felix Wittwer",MINI_OVER);
+			    PrintMini(2,-10-helpy,(unsigned char*)"Version 1.0",MINI_OVER);
+
+                PrintXY(2,2-helpy,(unsigned char*)"How to use HELP", 0);
+                PrintMini(2,16-helpy,(unsigned char*)"Use arrows UP and DOWN to",MINI_OVER);
+                PrintMini(2,22-helpy,(unsigned char*)"scroll up and down.",MINI_OVER);
+
+                PrintXY(2,36-helpy,(unsigned char*)"Main", 0);
+                PrintMini(2,50-helpy,(unsigned char*)"Use arrows UP and DOWN to",MINI_OVER);
+                PrintMini(2,56-helpy,(unsigned char*)"control the cursor on the left.",MINI_OVER);
+
+                PrintMini(2,68-helpy,(unsigned char*)"Use arrows LEFT and RIGHT",MINI_OVER);
+                PrintMini(2,74-helpy,(unsigned char*)"to change the value on the",MINI_OVER);
+                PrintMini(2,80-helpy,(unsigned char*)"right side of the cursor.",MINI_OVER);
+
+                PrintMini(2,92-helpy,(unsigned char*)"[DEL] F2",MINI_OVER);
+                PrintMini(2,98-helpy,(unsigned char*)"Sets all values to their",MINI_OVER);
+                PrintMini(2,104-helpy,(unsigned char*)"standard value.",MINI_OVER);
+
+                PrintMini(2,116-helpy,(unsigned char*)"[CALC] F3",MINI_OVER);
+                PrintMini(2,122-helpy,(unsigned char*)"calculates sw , sh , th",MINI_OVER);
+                PrintMini(2,128-helpy,(unsigned char*)"sw = thrown distance",MINI_OVER);
+                PrintMini(2,134-helpy,(unsigned char*)"sh = max height during throw",MINI_OVER);
+                PrintMini(2,140-helpy,(unsigned char*)"th = time to reach max height",MINI_OVER);
+
+                PrintMini(2,152-helpy,(unsigned char*)"[SIM] F4",MINI_OVER);
+                PrintMini(2,158-helpy,(unsigned char*)"draws a graph with the",MINI_OVER);
+                PrintMini(2,164-helpy,(unsigned char*)"calculated values.",MINI_OVER);
+
+                PrintMini(2,176-helpy,(unsigned char*)"[HELP] F5",MINI_OVER);
+                PrintMini(2,182-helpy,(unsigned char*)"You probably found ou the",MINI_OVER);
+                PrintMini(2,188-helpy,(unsigned char*)"function of this key at this",MINI_OVER);
+                PrintMini(2,194-helpy,(unsigned char*)"point.",MINI_OVER);
+
+                Render_F_Button(1,58, "EXIT");
+                Render_F_Button(88,58, "TOP ");
+                Render_F_Button(110,58, "BTM ");
+            }
+        }        
 
         if(key==KEY_CTRL_DOWN){
             varselected = varselected+1;
         }else if(key==KEY_CTRL_UP){
             varselected = varselected-1;
         }
-        varselected = Render_Indacator(varselected);
 
         if(varselected==1){
             if(key==KEY_CTRL_RIGHT){
@@ -251,39 +350,14 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
             }   
         }
 
+        if(key==KEY_CTRL_F3){
+            type = 1;
+        }else{
+            type = 0;
+        }
+
         Render_Main(angle, startvelocity, gravitationalforce, type);   
         varselected = Render_Indacator(varselected);
-
-        if(key==KEY_CTRL_F4){
-            Bdisp_AllClr_DDVRAM();
-
-            rad = (angle/180.0)*3.141592;
-            sw = ((pow(startvelocity, 2)*sin(2*rad))/gravitationalforce);
-            sh = (pow(startvelocity, 2)*pow((sin(rad)), 2)/(2*gravitationalforce));
-            th = ((startvelocity*sin(rad))/gravitationalforce);
-
-            Render_F_Button(1,58, "EXIT");
-            Render_F_Button(110,58, "PLAY");
-
-            while(1){
-                GetKey(&key);
-                
-                if(key==KEY_CTRL_F6){
-                    Print_Float(86,16, sw, 0);
-                    PrintXY(117,16, (unsigned char*)"m        ",0);
-                    Print_Float(86,26, sh, 0);
-                    PrintXY(117,26, (unsigned char*)"m        ",0);
-                    Print_Float(86,36, th, 0);
-                    PrintXY(117,36, (unsigned char*)"         ",0);
-                }
-
-                if(key==KEY_CTRL_F1){
-                    Render_Main(angle, startvelocity, gravitationalforce, type);   
-                    varselected = Render_Indacator(varselected);
-                    break;
-                }
-            }
-        }
     }
 
     return 1;

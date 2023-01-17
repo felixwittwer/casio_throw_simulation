@@ -2,11 +2,11 @@
 
 [_1]
 Type=5
-Order=1
+Order=0
 Top=0
 Left=2235
 Height=4755
-Width=5565
+Width=5535
 State=0
 Flags=00000020
 Setting=172:1:THROW.c
@@ -14,7 +14,7 @@ OptionA=0
 
 [_2]
 Type=1
-Order=3
+Order=2
 Top=15
 Left=7800
 Height=4785
@@ -26,7 +26,7 @@ OptionB=15
 
 [_3]
 Type=6
-Order=2
+Order=1
 Top=4740
 Left=7800
 Height=6390
@@ -92,7 +92,7 @@ OptionA=0
 
 [_9]
 Type=15
-Order=0
+Order=3
 Top=11175
 Left=30
 Height=8370
@@ -110,5 +110,5 @@ Height=20130
 Width=10815
 State=0
 Flags=00000020
-Setting=93:35:THROW.c
+Setting=11:10:THROW.c
 OptionA=0
