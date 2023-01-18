@@ -247,10 +247,9 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
         if(key==KEY_CTRL_F5){
 
             Bdisp_AllClr_DDVRAM();
-            PrintXY(2,2,(unsigned char*)"Press any key!", 0);
+            PrintXY(2,2,(unsigned char*)"Press EXE!", 0);
             Render_F_Button(1,58, "EXIT");
-            Render_F_Button(88,58, "TOP ");
-            Render_F_Button(110,58, "BTM ");
+            Render_F_Button(23,58, "EXE ");
 
             while(1){
                 GetKey(&key);
@@ -277,7 +276,7 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
                 }
 
                 if(key==KEY_CTRL_F6){
-                    helpy = 176;
+                    helpy = 152;
                 }
 
                 PrintMini(2,-16-helpy,(unsigned char*)"(c) 2023 Felix Wittwer",MINI_OVER);
@@ -310,7 +309,7 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
                 PrintMini(2,164-helpy,(unsigned char*)"calculated values.",MINI_OVER);
 
                 PrintMini(2,176-helpy,(unsigned char*)"[HELP] F5",MINI_OVER);
-                PrintMini(2,182-helpy,(unsigned char*)"You probably found ou the",MINI_OVER);
+                PrintMini(2,182-helpy,(unsigned char*)"You probably found out the",MINI_OVER);
                 PrintMini(2,188-helpy,(unsigned char*)"function of this key at this",MINI_OVER);
                 PrintMini(2,194-helpy,(unsigned char*)"point.",MINI_OVER);
 
