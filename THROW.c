@@ -32,12 +32,20 @@ void Print_Int(int x, int y, int i, int mini){
     }
 }
 
-void Render_Ball(int x, int y){
-    Bdisp_DrawLineVRAM(x-1,y+2,x+1,y+2);
-    Bdisp_DrawLineVRAM(x-2,y+1,x+2,y+1);
-    Bdisp_DrawLineVRAM(x-2,y,x+2,y);
-    Bdisp_DrawLineVRAM(x-2,y-1,x+2,y-1);
-    Bdisp_DrawLineVRAM(x-1,y-2,x+1,y-2);
+void Render_Ball(int x, int y, int clear){
+    if(clear==0){
+        Bdisp_DrawLineVRAM(x-1,y+2,x+1,y+2);
+        Bdisp_DrawLineVRAM(x-2,y+1,x+2,y+1);
+        Bdisp_DrawLineVRAM(x-2,y,x+2,y);
+        Bdisp_DrawLineVRAM(x-2,y-1,x+2,y-1);
+        Bdisp_DrawLineVRAM(x-1,y-2,x+1,y-2);
+    }else if(clear==1){
+        Bdisp_ClearLineVRAM(x-1,y+2,x+1,y+2);
+        Bdisp_ClearLineVRAM(x-2,y+1,x+2,y+1);
+        Bdisp_ClearLineVRAM(x-2,y,x+2,y);
+        Bdisp_ClearLineVRAM(x-2,y-1,x+2,y-1);
+        Bdisp_ClearLineVRAM(x-1,y-2,x+1,y-2);
+    }
 }
 
 
@@ -149,6 +157,50 @@ void Render_Main(int angle, float startvelocity, float gravitationalforce, int t
     Bdisp_PutDisp_DD();
 }
 
+Render_GRAPH(int x, int y, int xmax, int ymax, double sw, double sh, int angle, float gravitationalforce, float startvelocity, int ball){
+    double xstep;
+    int iteration = 0;
+    float ypoint;
+    float rad;
+    rad = (angle/180.0)*3.141592;
+
+    Bdisp_DrawLineVRAM(x,y,x,y+50);
+    Bdisp_DrawLineVRAM(x-2,y+48,x+120,y+48);
+
+    Bdisp_PutDisp_DD();
+
+    // 120/ymax
+    xstep = 1.00/(120.00/xmax);
+
+    Print_Float(30,60,xstep,1);
+    while(iteration<121){
+        // x = xstep*iteration
+        ypoint = tan(rad)*(xstep*iteration)-(gravitationalforce/(2*pow(startvelocity,2)*cos(rad)*cos(rad)))*pow((xstep*iteration),2);
+
+        //  ypoint = tan(rad)*(xstep*iteration);
+        if(ball==0){
+            Bdisp_SetPoint_VRAM(iteration+5, ypoint*-20+48 ,1);
+        }else if(ball==1){
+            Bdisp_DrawLineVRAM(x,y,x,y+50);
+            Bdisp_DrawLineVRAM(x-2,y+48,x+120,y+48);
+            Render_Ball(iteration+5, ypoint*-20+48,0);
+            Bdisp_PutDisp_DD();
+            Render_Ball(iteration+5, ypoint*-20+48,1);
+            Sleep(20);
+        }
+
+        if(ypoint<(-2)){
+                break;
+        }
+        
+        // Print_Float(40,6, ypoint, 1);
+        iteration = iteration + 1;
+    }
+
+    //(0|0) = x|y+48
+    // Render_Ball(x,y+48);
+}
+
 //****************************************************************************
 //  AddIn_main (Sample program main function)
 //
@@ -219,21 +271,19 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
             Bdisp_AllClr_DDVRAM();
             Render_F_Button(1,58, "EXIT");
             Render_F_Button(110,58, "PLAY");
+            Render_GRAPH(3, 5, sw+5, sh+2, sw , sh, angle, gravitationalforce, startvelocity,0);
 
             while(1){
                 GetKey(&key);
 
-                Bdisp_AllClr_DDVRAM();
                 Render_F_Button(1,58, "EXIT");
                 Render_F_Button(110,58, "PLAY");
+
+                Render_GRAPH(3, 5, sw+5, sh+2, sw , sh, angle, gravitationalforce, startvelocity,0);
                 
                 if(key==KEY_CTRL_F6){
-                    Print_Float(86,16, sw, 0);
-                    PrintXY(117,16, (unsigned char*)"m        ",0);
-                    Print_Float(86,26, sh, 0);
-                    PrintXY(117,26, (unsigned char*)"m        ",0);
-                    Print_Float(86,36, th, 0);
-                    PrintXY(117,36, (unsigned char*)"         ",0);
+                    //(0|0) = x|y+48
+                    Render_GRAPH(3, 5, sw+5, sh+2, sw , sh, angle, gravitationalforce, startvelocity,1);
                 }
 
                 if(key==KEY_CTRL_F1){

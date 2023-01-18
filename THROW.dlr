@@ -67,6 +67,7 @@ Sublevel=1
 File=C:\Users\Felix\Desktop\THROW\THROW.c
 Line=159
 Flags=00001012
+Sublevel=1
 
 [Breakpoint]
 File=C:\Users\Felix\Desktop\THROW\THROW.c
@@ -117,5 +118,11 @@ Flags=00001012
 [Breakpoint]
 File=C:\Users\Felix\Desktop\THROW\THROW.c
 Line=196
+Flags=00001012
+Sublevel=2
+
+[Breakpoint]
+File=C:\Users\Felix\Desktop\THROW\THROW.c
+Line=159
 Flags=00001012
 Sublevel=2
