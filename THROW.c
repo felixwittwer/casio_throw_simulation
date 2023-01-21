@@ -162,6 +162,7 @@ Render_GRAPH(int x, int y, int xmax, int ymax, double sw, double sh, int angle, 
     int iteration = 0;
     float ypoint;
     float rad;
+    float yscale;
     rad = (angle/180.0)*3.141592;
 
     Bdisp_DrawLineVRAM(x,y,x,y+50);
@@ -169,23 +170,27 @@ Render_GRAPH(int x, int y, int xmax, int ymax, double sw, double sh, int angle, 
 
     Bdisp_PutDisp_DD();
 
-    // 120/ymax
     xstep = 1.00/(120.00/xmax);
+    yscale = (50/ymax);
+    if(yscale<0){
+        yscale = 1;
+    }
 
-    Print_Float(30,60,xstep,1);
+
     while(iteration<121){
         // x = xstep*iteration
         ypoint = tan(rad)*(xstep*iteration)-(gravitationalforce/(2*pow(startvelocity,2)*cos(rad)*cos(rad)))*pow((xstep*iteration),2);
+        // Print_Float(90,30,xstep,1);
+        // Print_Float(90,36,yscale,1);
 
-        //  ypoint = tan(rad)*(xstep*iteration);
         if(ball==0){
-            Bdisp_SetPoint_VRAM(iteration+5, ypoint*-20+48 ,1);
+            Bdisp_SetPoint_VRAM(iteration+5, ypoint*-1*yscale+48 ,1);
         }else if(ball==1){
             Bdisp_DrawLineVRAM(x,y,x,y+50);
             Bdisp_DrawLineVRAM(x-2,y+48,x+120,y+48);
-            Render_Ball(iteration+5, ypoint*-20+48,0);
+            Render_Ball(iteration+5, ypoint*-1*yscale+48,0);
             Bdisp_PutDisp_DD();
-            Render_Ball(iteration+5, ypoint*-20+48,1);
+            Render_Ball(iteration+5, ypoint*-1*yscale+48,1);
             Sleep(20);
         }
 
@@ -193,7 +198,6 @@ Render_GRAPH(int x, int y, int xmax, int ymax, double sw, double sh, int angle, 
                 break;
         }
         
-        // Print_Float(40,6, ypoint, 1);
         iteration = iteration + 1;
     }
 
