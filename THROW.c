@@ -301,7 +301,23 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
         if(key==KEY_CTRL_F5){
 
             Bdisp_AllClr_DDVRAM();
-            PrintXY(2,2,(unsigned char*)"Press EXE!", 0);
+            PrintXY(55,7,(unsigned char*)"Press EXE", 0);
+            PrintXY(55,15,(unsigned char*)"to continue", 0);
+            //Print Page
+            Bdisp_DrawLineVRAM(5,5,45,5);
+            Bdisp_DrawLineVRAM(5,50,45,50);
+            Bdisp_DrawLineVRAM(5,5,5,50);
+            Bdisp_DrawLineVRAM(45,5,45,50);
+            PrintXY(7,7,(unsigned char*)"HELP", 0);
+            //display lines
+            Bdisp_DrawLineVRAM(7,18,40,18);
+            Bdisp_DrawLineVRAM(7,22,36,22);
+            Bdisp_DrawLineVRAM(7,26,37,26);
+
+            Bdisp_DrawLineVRAM(7,33,40,33);
+            Bdisp_DrawLineVRAM(7,37,38,37);
+            Bdisp_DrawLineVRAM(7,41,34,41);
+
             Render_F_Button(1,58, "EXIT");
             Render_F_Button(23,58, "EXE ");
 
